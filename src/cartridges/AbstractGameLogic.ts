@@ -1,5 +1,6 @@
 import {KeyPress, GameLogicArgs, Speed} from '../types/types'
 import { shouldGenerateNextMove } from '../functions/shouldGenerateNextMove';
+import { board, nextFigure } from '../constants/constants';
 
 // type NextFigureFieldContent = [number[], number[], number[] ,number[]];
 // type NextFigureFieldContent = number[][];
@@ -7,10 +8,14 @@ import { shouldGenerateNextMove } from '../functions/shouldGenerateNextMove';
 
 export const arrayOfElements  = <T>(length: number, element: T) => Array(length).fill(element);
 export const getDojoOfSymbols = (digit:number) => {
-    return arrayOfElements<number[]>(20, arrayOfElements<number>(10, digit));
+    return arrayOfElements<number[]>(board.HEIGHT, arrayOfElements<number>(board.WIDTH, digit));
 }
 export const getNextFigureOfSymbols = (digit:number) => {
-    return arrayOfElements<number[]>(4, arrayOfElements<number>(4, digit));
+    return arrayOfElements<number[]>(nextFigure.HEIGHT, arrayOfElements<number>(nextFigure.WIDTH, digit));
+}
+
+export const getDojoBar = (digit: number) => {
+    return arrayOfElements<number>(board.WIDTH, digit)
 }
 
 
@@ -32,12 +37,12 @@ export class GameLogic {
     protected paused: boolean = false;
     protected brickCoordinantes = this.EMPRY_BRICK_COORDINANTES
 
-    init({ score, level, speed, nextFigureFieldContent, brickCoordinantes }: GameLogicArgs) {
+    init({ score, level, speed, nextFigure, brickMap }: GameLogicArgs) {
         this.score = score;
         this.level = level;
         this.speed = speed;
-        this.nextFigureFieldContent = nextFigureFieldContent;
-        this.brickCoordinantes = brickCoordinantes;
+        this.nextFigureFieldContent = nextFigure;
+        this.brickCoordinantes = brickMap;
     }
 
     setPaused(value: boolean): void {
@@ -49,8 +54,10 @@ export class GameLogic {
             score:this.score, 
             level: this.level, 
             speed: this.speed, 
-            nextFigureFieldContent : this.EMPTY_FIELD_CONTENT,
-            brickCoordinantes: this.EMPRY_BRICK_COORDINANTES,
+            nextFigure : this.EMPTY_FIELD_CONTENT,
+            brickMap: this.EMPRY_BRICK_COORDINANTES,
+            isPaused: false,
+            isAnimating: false,
         }
     }
 
